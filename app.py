@@ -3,6 +3,14 @@ Home Workout – Trening w domu
 Aplikacja Streamlit z dynamicznym dostosowywaniem planów do sprzętu użytkownika.
 """
 
+import sys
+from pathlib import Path
+
+# Zapewnia poprawne importy na Streamlit Cloud (ścieżka /mount/src/...)
+ROOT = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import time
 from datetime import datetime
 

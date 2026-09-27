@@ -467,7 +467,7 @@ EXERCISES = [
     # --- NOWE: większa różnorodność ---
     {
         "id": "knee_pushup",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/knee-push-up.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/kneeling-push-up-male.gif",
         "name_pl": "Pompki na kolanach",
         "muscle_group": "chest",
         "difficulty": "beginner",
@@ -494,7 +494,7 @@ EXERCISES = [
     },
     {
         "id": "glute_bridge",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/bridge.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/low-glute-bridge-on-floor.gif",
         "name_pl": "Mostek biodrowy",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -507,7 +507,7 @@ EXERCISES = [
     },
     {
         "id": "wall_sit",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/wall-sit.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/march-sit-wall.gif",
         "name_pl": "Przysiad przy ścianie",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -520,7 +520,7 @@ EXERCISES = [
     },
     {
         "id": "reverse_lunge",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/bodyweight-reverse-lunge.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/walking-lunge.gif",
         "name_pl": "Wypad w tył",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -545,7 +545,7 @@ EXERCISES = [
     },
     {
         "id": "step_up",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/step-up.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-step-up.gif",
         "name_pl": "Wejścia na podwyższenie",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -558,7 +558,7 @@ EXERCISES = [
     },
     {
         "id": "side_plank",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/side-plank.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/bodyweight-incline-side-plank.gif",
         "name_pl": "Deska boczna",
         "muscle_group": "core",
         "difficulty": "intermediate",
@@ -584,7 +584,7 @@ EXERCISES = [
     },
     {
         "id": "bird_dog",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lower-back/bird-dog.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/spine/hyperextension.gif",
         "name_pl": "Bird dog",
         "muscle_group": "core",
         "difficulty": "beginner",
@@ -609,7 +609,7 @@ EXERCISES = [
     },
     {
         "id": "flutter_kicks",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/flutter-kicks.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/flutter-kicks.gif",
         "name_pl": "Nożyce nogami",
         "muscle_group": "core",
         "difficulty": "intermediate",
@@ -634,7 +634,7 @@ EXERCISES = [
     },
     {
         "id": "bear_crawl",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/full-body/bear-crawl.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/bear-crawl.gif",
         "name_pl": "Bear crawl",
         "muscle_group": "fullbody",
         "difficulty": "intermediate",
@@ -646,7 +646,7 @@ EXERCISES = [
     },
     {
         "id": "inchworm",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/full-body/inchworm.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/inchworm.gif",
         "name_pl": "Inchworm",
         "muscle_group": "fullbody",
         "difficulty": "beginner",
@@ -658,7 +658,7 @@ EXERCISES = [
     },
     {
         "id": "chair_dip",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/bench-dip.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/bench-dip-on-floor.gif",
         "name_pl": "Dipy na krześle",
         "muscle_group": "arms",
         "difficulty": "beginner",
@@ -685,7 +685,7 @@ EXERCISES = [
     },
     {
         "id": "db_rdl",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/dumbbell-romanian-deadlift.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-romanian-deadlift.gif",
         "name_pl": "Rumuński martwy ciąg (hantle)",
         "muscle_group": "back",
         "difficulty": "intermediate",
@@ -698,7 +698,7 @@ EXERCISES = [
     },
     {
         "id": "db_goblet_lunge",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-lunge.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-lunge.gif",
         "name_pl": "Wypady z hantlami",
         "muscle_group": "legs",
         "difficulty": "intermediate",
@@ -711,7 +711,7 @@ EXERCISES = [
     },
     {
         "id": "band_chest_press",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/band-standing-chest-press.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/resistance-band-seated-chest-press.gif",
         "name_pl": "Wyciskanie klatki z gumą",
         "muscle_group": "chest",
         "difficulty": "beginner",
@@ -724,7 +724,7 @@ EXERCISES = [
     },
     {
         "id": "band_face_pull",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-face-pull.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-y-raise.gif",
         "name_pl": "Face pull z gumą",
         "muscle_group": "shoulders",
         "difficulty": "beginner",
@@ -736,7 +736,7 @@ EXERCISES = [
     },
     {
         "id": "band_good_morning",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/band-good-morning.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-stiff-leg-deadlift.gif",
         "name_pl": "Good morning z gumą",
         "muscle_group": "back",
         "difficulty": "beginner",
@@ -748,7 +748,7 @@ EXERCISES = [
     },
     {
         "id": "shadow_boxing",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/shadow-boxing.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/left-hook-boxing.gif",
         "name_pl": "Cień bokserski",
         "muscle_group": "cardio",
         "difficulty": "beginner",
@@ -760,7 +760,7 @@ EXERCISES = [
     },
     {
         "id": "squat_pulse",
-        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/bodyweight-squat.gif",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/squat-to-overhead-reach.gif",
         "name_pl": "Przysiad z pulse",
         "muscle_group": "legs",
         "difficulty": "intermediate",

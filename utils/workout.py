@@ -1,14 +1,18 @@
-"""Logika generowania treningu i filtrowania ćwiczeń."""
+"""Logika generowania treningu, rozgrzewki i filtrowania ćwiczeń."""
 
 import random
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from data.exercises import (
     EXERCISES,
     DIFFICULTY_LABELS,
     GOAL_LABELS,
 )
+
+
+# Ćwiczenia typowe na rozgrzewkę (id z bazy)
+WARMUP_IDS = ["jumping_jack", "high_knees", "squat", "lunge", "plank", "mountain_climber"]
 
 
 def filter_by_equipment(available: List[str]) -> List[Dict]:
@@ -24,6 +28,42 @@ def filter_by_difficulty(exercises: List[Dict], level: str) -> List[Dict]:
     order = ["beginner", "intermediate", "advanced"]
     max_idx = order.index(level)
     return [ex for ex in exercises if order.index(ex["difficulty"]) <= max_idx]
+
+
+def get_exercise_by_id(ex_id: str) -> Optional[Dict]:
+    for ex in EXERCISES:
+        if ex["id"] == ex_id:
+            return ex
+    return None
+
+
+def find_alternative(exercise: Dict, available: List[str]) -> Optional[Dict]:
+    """
+    Szuka zamiennika: to samo muscle_group, inny id, dostępny sprzęt.
+    Preferuje pole alternative_id jeśli jest w bazie.
+    """
+    alt_id = exercise.get("alternative_id")
+    if alt_id:
+        alt = get_exercise_by_id(alt_id)
+        if alt and all(eq in available for eq in alt["equipment"]):
+            return alt
+
+    candidates = [
+        e
+        for e in EXERCISES
+        if e["id"] != exercise["id"]
+        and e["muscle_group"] == exercise["muscle_group"]
+        and all(eq in available for eq in e["equipment"])
+    ]
+    if not candidates:
+        # dowolne z dostępnego sprzętu
+        candidates = [
+            e
+            for e in EXERCISES
+            if e["id"] != exercise["id"]
+            and all(eq in available for eq in e["equipment"])
+        ]
+    return random.choice(candidates) if candidates else None
 
 
 def _get_rest_seconds(level: str) -> int:
@@ -46,7 +86,7 @@ def _select_exercises(filtered: List[Dict], goal: str, count: int) -> List[Dict]
         "endurance": ["cardio", "fullbody", "legs", "core"],
     }
     preferred_groups = prefer.get(goal, ["fullbody"])
-    selected = []
+    selected: List[Dict] = []
     pool = list(filtered)
 
     for group in preferred_groups:
@@ -67,11 +107,38 @@ def _select_exercises(filtered: List[Dict], goal: str, count: int) -> List[Dict]
     return selected
 
 
+def _build_warmup(available: List[str]) -> List[Dict]:
+    """2–3 lekkie ćwiczenia na rozgrzewkę (1 seria, krótszy czas/reps)."""
+    pool = filter_by_equipment(available)
+    warmup_pool = [e for e in pool if e["id"] in WARMUP_IDS]
+    if len(warmup_pool) < 2:
+        warmup_pool = [e for e in pool if e["difficulty"] == "beginner"]
+    random.shuffle(warmup_pool)
+    chosen = warmup_pool[:3]
+    items = []
+    for ex in chosen:
+        item = {
+            "exercise": ex,
+            "sets": 1,
+            "rest_seconds": 20,
+            "is_warmup": True,
+        }
+        if ex.get("is_timed"):
+            item["duration"] = min(30, ex.get("default_duration", 30))
+            item["reps"] = None
+        else:
+            item["reps"] = min(10, ex.get("default_reps", 10))
+            item["duration"] = None
+        items.append(item)
+    return items
+
+
 def generate_workout(
     available_equipment: List[str],
     goal: str,
     duration_min: int,
     level: str,
+    include_warmup: bool = False,
 ) -> Dict[str, Any]:
     filtered = filter_by_equipment(available_equipment)
     filtered = filter_by_difficulty(filtered, level)
@@ -82,12 +149,17 @@ def generate_workout(
     rest = _get_rest_seconds(level)
     sets = _get_sets(level, goal)
 
-    workout_exercises = []
+    workout_exercises: List[Dict] = []
+
+    if include_warmup:
+        workout_exercises.extend(_build_warmup(available_equipment))
+
     for ex in selected:
         item = {
             "exercise": ex,
             "sets": sets,
             "rest_seconds": rest,
+            "is_warmup": False,
         }
         if ex.get("is_timed"):
             item["duration"] = ex.get("default_duration", 40)
@@ -102,8 +174,10 @@ def generate_workout(
             item["duration"] = None
         workout_exercises.append(item)
 
+    main_ex = [e for e in workout_exercises if not e.get("is_warmup")]
     avg_cal = (
-        sum(e.get("calories_per_min", 7) for e in selected) / max(1, len(selected))
+        sum(e["exercise"].get("calories_per_min", 7) for e in main_ex)
+        / max(1, len(main_ex))
     )
     estimated_calories = int(avg_cal * duration_min * 0.85)
 
@@ -112,6 +186,7 @@ def generate_workout(
         "goal": goal,
         "duration": duration_min,
         "level": level,
+        "include_warmup": include_warmup,
         "exercises": workout_exercises,
         "estimated_calories": estimated_calories,
         "created_at": datetime.now().isoformat(),
@@ -122,6 +197,8 @@ def make_session(
     workout: Dict,
     duration_minutes: int,
     exercises_completed: int,
+    rpe: Optional[int] = None,
+    note: str = "",
 ) -> Dict:
     return {
         "id": f"s-{int(datetime.now().timestamp())}",
@@ -133,4 +210,6 @@ def make_session(
         "total_exercises": len(workout["exercises"]),
         "estimated_calories": workout["estimated_calories"],
         "workout_name": f"{GOAL_LABELS[workout['goal']]} {workout['duration']} min",
+        "rpe": rpe,
+        "note": note or "",
     }

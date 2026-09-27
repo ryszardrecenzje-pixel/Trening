@@ -56,6 +56,7 @@ EXERCISES = [
     # --- BODYWEIGHT / CHEST ---
     {
         "id": "pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/push-up.gif",
         "name_pl": "Pompki klasyczne",
         "muscle_group": "chest",
         "difficulty": "beginner",
@@ -67,6 +68,7 @@ EXERCISES = [
     },
     {
         "id": "diamond_pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/diamond-push-up.gif",
         "name_pl": "Pompki diamentowe",
         "muscle_group": "chest",
         "difficulty": "intermediate",
@@ -78,6 +80,7 @@ EXERCISES = [
     },
     {
         "id": "decline_pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/decline-push-up.gif",
         "name_pl": "Pompki z nogami na podwyższeniu",
         "muscle_group": "chest",
         "difficulty": "intermediate",
@@ -90,6 +93,7 @@ EXERCISES = [
     # --- BACK ---
     {
         "id": "superman",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/spine/hyperextension.gif",
         "name_pl": "Superman",
         "muscle_group": "back",
         "difficulty": "beginner",
@@ -101,6 +105,7 @@ EXERCISES = [
     },
     {
         "id": "pullup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/pull-up.gif",
         "name_pl": "Podciąganie na drążku",
         "muscle_group": "back",
         "difficulty": "advanced",
@@ -112,6 +117,7 @@ EXERCISES = [
     },
     {
         "id": "inverted_row",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/inverted-row.gif",
         "name_pl": "Wiosłowanie odwrócone",
         "muscle_group": "back",
         "difficulty": "intermediate",
@@ -124,6 +130,7 @@ EXERCISES = [
     # --- LEGS ---
     {
         "id": "squat",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/bodyweight-drop-jump-squat.gif",
         "name_pl": "Przysiad bez obciążenia",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -135,6 +142,7 @@ EXERCISES = [
     },
     {
         "id": "lunge",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/walking-lunge.gif",
         "name_pl": "Wykrok do przodu",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -146,6 +154,7 @@ EXERCISES = [
     },
     {
         "id": "bulgarian_split",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/band-single-leg-split-squat.gif",
         "name_pl": "Przysiad bułgarski",
         "muscle_group": "legs",
         "difficulty": "intermediate",
@@ -157,6 +166,7 @@ EXERCISES = [
     },
     {
         "id": "jump_squat",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/jump-squat.gif",
         "name_pl": "Przysiad z wyskokiem",
         "muscle_group": "legs",
         "difficulty": "intermediate",
@@ -169,6 +179,7 @@ EXERCISES = [
     # --- SHOULDERS ---
     {
         "id": "pike_pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/exercise-ball-pike-push-up.gif",
         "name_pl": "Pompki w pozycji szczupaka",
         "muscle_group": "shoulders",
         "difficulty": "intermediate",
@@ -180,6 +191,7 @@ EXERCISES = [
     },
     {
         "id": "handstand_hold",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/handstand.gif",
         "name_pl": "Stanie na rękach przy ścianie",
         "muscle_group": "shoulders",
         "difficulty": "advanced",
@@ -192,6 +204,7 @@ EXERCISES = [
     # --- CORE ---
     {
         "id": "plank",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/power-point-plank.gif",
         "name_pl": "Deska",
         "muscle_group": "core",
         "difficulty": "beginner",
@@ -203,6 +216,7 @@ EXERCISES = [
     },
     {
         "id": "bicycle_crunch",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/air-bike.gif",
         "name_pl": "Rowerek",
         "muscle_group": "core",
         "difficulty": "beginner",
@@ -214,6 +228,7 @@ EXERCISES = [
     },
     {
         "id": "leg_raise",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/lying-leg-raise-flat-bench.gif",
         "name_pl": "Unoszenie nóg leżąc",
         "muscle_group": "core",
         "difficulty": "intermediate",
@@ -225,6 +240,7 @@ EXERCISES = [
     },
     {
         "id": "mountain_climber",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/mountain-climber.gif",
         "name_pl": "Wspinaczka górska",
         "muscle_group": "core",
         "difficulty": "intermediate",
@@ -237,6 +253,7 @@ EXERCISES = [
     # --- ARMS ---
     {
         "id": "tricep_dip",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/triceps-dip.gif",
         "name_pl": "Pompki na triceps (dipy)",
         "muscle_group": "arms",
         "difficulty": "beginner",
@@ -249,6 +266,7 @@ EXERCISES = [
     # --- DUMBBELLS ---
     {
         "id": "db_press",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-bench-press.gif",
         "name_pl": "Wyciskanie hantli leżąc",
         "muscle_group": "chest",
         "difficulty": "intermediate",
@@ -260,6 +278,7 @@ EXERCISES = [
     },
     {
         "id": "db_row",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/dumbbell-one-arm-bent-over-row.gif",
         "name_pl": "Wiosłowanie hantlem",
         "muscle_group": "back",
         "difficulty": "intermediate",
@@ -271,6 +290,7 @@ EXERCISES = [
     },
     {
         "id": "db_shoulder_press",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-seated-shoulder-press.gif",
         "name_pl": "Wyciskanie hantli nad głowę",
         "muscle_group": "shoulders",
         "difficulty": "intermediate",
@@ -282,6 +302,7 @@ EXERCISES = [
     },
     {
         "id": "db_curl",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-alternate-biceps-curl.gif",
         "name_pl": "Uginanie na biceps",
         "muscle_group": "arms",
         "difficulty": "beginner",
@@ -293,6 +314,7 @@ EXERCISES = [
     },
     {
         "id": "goblet_squat",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-goblet-squat.gif",
         "name_pl": "Przysiad goblet",
         "muscle_group": "legs",
         "difficulty": "intermediate",
@@ -305,6 +327,7 @@ EXERCISES = [
     # --- RESISTANCE BANDS ---
     {
         "id": "band_pullapart",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/resistance-band-seated-straight-back-row.gif",
         "name_pl": "Rozciąganie gumy",
         "muscle_group": "shoulders",
         "difficulty": "beginner",
@@ -316,6 +339,7 @@ EXERCISES = [
     },
     {
         "id": "band_row",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/resistance-band-seated-straight-back-row.gif",
         "name_pl": "Wiosłowanie z gumą",
         "muscle_group": "back",
         "difficulty": "beginner",
@@ -327,6 +351,7 @@ EXERCISES = [
     },
     {
         "id": "band_squat",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-squat.gif",
         "name_pl": "Przysiad z gumą",
         "muscle_group": "legs",
         "difficulty": "beginner",
@@ -339,6 +364,7 @@ EXERCISES = [
     # --- RINGS / TRX ---
     {
         "id": "trx_row",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/suspended-row.gif",
         "name_pl": "Wiosłowanie TRX / kółka",
         "muscle_group": "back",
         "difficulty": "intermediate",
@@ -350,6 +376,7 @@ EXERCISES = [
     },
     {
         "id": "trx_pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/suspended-push-up.gif",
         "name_pl": "Pompki na TRX",
         "muscle_group": "chest",
         "difficulty": "advanced",
@@ -362,6 +389,7 @@ EXERCISES = [
     # --- CARDIO / FULLBODY ---
     {
         "id": "jump_rope",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/jump-rope.gif",
         "name_pl": "Skakanie na skakance",
         "muscle_group": "cardio",
         "difficulty": "beginner",
@@ -373,6 +401,7 @@ EXERCISES = [
     },
     {
         "id": "burpee",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/burpee.gif",
         "name_pl": "Burpee",
         "muscle_group": "fullbody",
         "difficulty": "intermediate",
@@ -384,6 +413,7 @@ EXERCISES = [
     },
     {
         "id": "high_knees",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/high-knee-against-wall.gif",
         "name_pl": "Wysokie kolana",
         "muscle_group": "cardio",
         "difficulty": "beginner",
@@ -395,6 +425,7 @@ EXERCISES = [
     },
     {
         "id": "jumping_jack",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/jack-jump-male.gif",
         "name_pl": "Pajacyki",
         "muscle_group": "cardio",
         "difficulty": "beginner",

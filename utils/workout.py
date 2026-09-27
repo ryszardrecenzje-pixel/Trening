@@ -169,9 +169,26 @@ def generate_workout(
     duration_min: int,
     level: str,
     include_warmup: bool = False,
+    equipment_focus: Optional[str] = None,
 ) -> Dict[str, Any]:
+    """
+    equipment_focus: np. "dumbbells" → tylko ćwiczenia z tym sprzętem
+    (musi być w available_equipment). None = wszystkie dostępne.
+    """
     filtered = filter_by_equipment(available_equipment)
     filtered = filter_by_difficulty(filtered, level)
+
+    if equipment_focus:
+        focused = [e for e in filtered if equipment_focus in e.get("equipment", [])]
+        # jeśli za mało (np. < 4), dołóż bodyweight jako uzupełnienie
+        if len(focused) >= 4:
+            filtered = focused
+        elif focused:
+            bw = [
+                e for e in filtered
+                if e not in focused and e.get("equipment") == ["bodyweight"]
+            ]
+            filtered = focused + bw
 
     target_count = max(4, min(12, duration_min // 3))
     selected = _select_exercises(filtered, goal, target_count)
@@ -217,6 +234,7 @@ def generate_workout(
         "duration": duration_min,
         "level": level,
         "include_warmup": include_warmup,
+        "equipment_focus": equipment_focus,
         "exercises": workout_exercises,
         "estimated_calories": estimated_calories,
         "created_at": datetime.now().isoformat(),

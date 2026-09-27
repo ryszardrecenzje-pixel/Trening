@@ -352,6 +352,7 @@ def page_workout():
                             fav["duration"],
                             fav["level"],
                             include_warmup=fav.get("include_warmup", False),
+                            equipment_focus=fav.get("equipment_focus"),
                         )
                         st.session_state.generated_workout = w
                         st.rerun()
@@ -395,6 +396,33 @@ def page_workout():
     )
 
     include_warmup = st.toggle(t("warmup", LANG), value=True, key="warmup_toggle")
+
+    # Tryb: tylko wybrany sprzęt (np. sam hantle)
+    focus_options = [("all", "Wszystkie dostępne")]
+    for eq in st.session_state.equipment:
+        if eq == "bodyweight":
+            focus_options.append((eq, "Tylko masa ciała"))
+        else:
+            focus_options.append((eq, f"Tylko: {EQUIPMENT_LABELS.get(eq, eq)}"))
+    focus_keys = [x[0] for x in focus_options]
+    focus_labels = {x[0]: x[1] for x in focus_options}
+    st.subheader("Skupienie na sprzęcie")
+    equipment_focus_sel = st.radio(
+        "focus",
+        focus_keys,
+        format_func=lambda k: focus_labels[k],
+        horizontal=False,
+        label_visibility="collapsed",
+        key="equipment_focus_select",
+        index=0,
+    )
+    equipment_focus = None if equipment_focus_sel == "all" else equipment_focus_sel
+    if equipment_focus:
+        st.caption(
+            "Plan zbuduje się głównie z ćwiczeń na ten sprzęt "
+            "(gdy za mało – uzupełni masą ciała)."
+        )
+
     st.divider()
 
     if st.button(t("generate", LANG), type="primary", use_container_width=True):
@@ -405,6 +433,7 @@ def page_workout():
                 duration,
                 level,
                 include_warmup=include_warmup,
+                equipment_focus=equipment_focus,
             )
         st.session_state.generated_workout = workout
         st.rerun()
@@ -418,9 +447,11 @@ def page_workout():
     n_main = sum(1 for e in workout["exercises"] if not e.get("is_warmup"))
     n_wu = sum(1 for e in workout["exercises"] if e.get("is_warmup"))
     extra = f" + {n_wu} WU" if n_wu else ""
+    focus = workout.get("equipment_focus")
+    focus_txt = f" • {EQUIPMENT_LABELS.get(focus, focus)}" if focus else ""
     st.caption(
         f"{n_main} ćw.{extra} • ~{workout['estimated_calories']} kcal • "
-        f"{DIFFICULTY_LABELS[workout['level']]}"
+        f"{DIFFICULTY_LABELS[workout['level']]}{focus_txt}"
     )
 
     for i, we in enumerate(workout["exercises"], 1):
@@ -461,12 +492,16 @@ def page_workout():
     with c2:
         if st.button(t("save_favorite", LANG), use_container_width=True, key="save_fav"):
             name = f"{GOAL_LABELS[workout['goal']]} {workout['duration']}min"
+            focus = workout.get("equipment_focus")
+            if focus:
+                name = f"{name} · {EQUIPMENT_LABELS.get(focus, focus)}"
             fav = {
                 "name": name,
                 "goal": workout["goal"],
                 "duration": workout["duration"],
                 "level": workout["level"],
                 "include_warmup": workout.get("include_warmup", False),
+                "equipment_focus": focus,
             }
             st.session_state.favorites = add_favorite(st.session_state.favorites, fav)
             st.success("⭐")

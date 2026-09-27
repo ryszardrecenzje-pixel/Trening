@@ -4,6 +4,7 @@ Aplikacja Streamlit z dynamicznym dostosowywaniem planów do sprzętu użytkowni
 """
 
 import sys
+import math
 from pathlib import Path
 
 # Zapewnia poprawne importy na Streamlit Cloud (ścieżka /mount/src/...)
@@ -49,10 +50,120 @@ def init_state():
         "player_phase": "exercise", # exercise | rest | complete
         "player_start_ts": None,
         "completed_exercises": 0,
+        # Stoper
+        "timer_mode": "idle",       # idle | get_ready | running | paused | finished
+        "timer_total": 0,
+        "timer_remaining": 0,
+        "timer_deadline": None,
+        "timer_ready_deadline": None,
+        "timer_context": None,      # "exercise" | "rest" – do auto-advance
     }
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
+
+
+def _reset_timer(seconds: int, context: str):
+    """Ustawia stoper na nowy czas (idle)."""
+    st.session_state.timer_mode = "idle"
+    st.session_state.timer_total = seconds
+    st.session_state.timer_remaining = seconds
+    st.session_state.timer_deadline = None
+    st.session_state.timer_ready_deadline = None
+    st.session_state.timer_context = context
+
+
+def _start_timer():
+    """Start → 3 s zwłoki (get_ready), potem running."""
+    st.session_state.timer_mode = "get_ready"
+    st.session_state.timer_ready_deadline = time.time() + 3
+    # remaining zostaje bez zmian (pełny czas lub po pauzie)
+
+
+def _stop_timer():
+    """Stop – zamraża aktualny remaining."""
+    if st.session_state.timer_mode == "running" and st.session_state.timer_deadline:
+        left = max(0, int(round(st.session_state.timer_deadline - time.time())))
+        st.session_state.timer_remaining = left
+    st.session_state.timer_mode = "paused"
+    st.session_state.timer_deadline = None
+    st.session_state.timer_ready_deadline = None
+
+
+def _format_mmss(seconds: int) -> str:
+    m, s = divmod(max(0, int(seconds)), 60)
+    return f"{m:02d}:{s:02d}"
+
+
+def _render_timer_controls(css_class: str = "timer-display"):
+    """
+    Renderuje stoper z przyciskami Start / Stop.
+    Po Start: 3 s odliczanie, potem odliczanie czasu.
+    Zwraca True gdy timer dobiegł do zera (finished).
+    """
+    mode = st.session_state.timer_mode
+    remaining = st.session_state.timer_remaining
+
+    # ── Aktualizacja w trakcie get_ready / running ──
+    if mode == "get_ready" and st.session_state.timer_ready_deadline:
+        left_ready = st.session_state.timer_ready_deadline - time.time()
+        if left_ready <= 0:
+            # Koniec zwłoki → start właściwego stopera
+            st.session_state.timer_mode = "running"
+            st.session_state.timer_deadline = time.time() + st.session_state.timer_remaining
+            st.session_state.timer_ready_deadline = None
+            st.rerun()
+        else:
+            n = max(1, int(math.ceil(left_ready)))
+            st.markdown(
+                f"<div class='{css_class}' style='color:#fbbf24;font-size:4rem'>{n}</div>",
+                unsafe_allow_html=True,
+            )
+            st.caption("Przygotuj się…")
+            time.sleep(0.15)
+            st.rerun()
+
+    if mode == "running" and st.session_state.timer_deadline:
+        left = st.session_state.timer_deadline - time.time()
+        if left <= 0:
+            st.session_state.timer_remaining = 0
+            st.session_state.timer_mode = "finished"
+            st.session_state.timer_deadline = None
+            st.rerun()
+        else:
+            remaining = max(0, int(math.ceil(left)))
+            st.session_state.timer_remaining = remaining
+
+    # ── Wyświetlanie ──
+    if mode == "finished":
+        st.markdown(
+            f"<div class='{css_class}'>00:00</div>",
+            unsafe_allow_html=True,
+        )
+        st.success("Czas minął!")
+        return True
+
+    if mode != "get_ready":
+        st.markdown(
+            f"<div class='{css_class}'>{_format_mmss(remaining)}</div>",
+            unsafe_allow_html=True,
+        )
+
+    # ── Przyciski ──
+    if mode in ("idle", "paused"):
+        label = "▶️ Start" if mode == "idle" else "▶️ Wznów"
+        if st.button(label, type="primary", use_container_width=True, key="timer_start"):
+            _start_timer()
+            st.rerun()
+    elif mode == "running":
+        if st.button("⏸️ Stop", type="secondary", use_container_width=True, key="timer_stop"):
+            _stop_timer()
+            st.rerun()
+        # Auto-odświeżanie co ~0.2 s
+        time.sleep(0.2)
+        st.rerun()
+
+    return False
 
 
 init_state()
@@ -336,6 +447,12 @@ def page_workout():
             st.session_state.player_phase = "exercise"
             st.session_state.player_start_ts = time.time()
             st.session_state.completed_exercises = 0
+            # Inicjalizacja stopera dla pierwszego ćwiczenia
+            first = workout["exercises"][0]
+            if first.get("duration"):
+                _reset_timer(first["duration"], "exercise")
+            else:
+                _reset_timer(0, "exercise")
             st.rerun()
 
 
@@ -419,15 +536,42 @@ def page_player():
             unsafe_allow_html=True,
         )
 
+        # Animacja GIF – jak wykonać ćwiczenie
+        gif = ex.get("gif_url")
+        if gif:
+            st.image(gif, use_container_width=True, caption="Podgląd ruchu")
+
         if we.get("duration"):
-            # Ćwiczenie czasowe – pokaż cel i przycisk
-            mins, secs = divmod(we["duration"], 60)
-            st.markdown(
-                f"<div class='timer-display'>{mins:02d}:{secs:02d}</div>",
-                unsafe_allow_html=True,
-            )
-            st.caption("Wykonuj ćwiczenie przez powyższy czas, potem kliknij Zrobione.")
+            # Ćwiczenie czasowe – stoper ze Start / Stop + 3 s zwłoki
+            # Upewnij się, że stoper jest zainicjalizowany na ten czas
+            if (
+                st.session_state.timer_context != "exercise"
+                or st.session_state.timer_total != we["duration"]
+            ) and st.session_state.timer_mode in ("idle", "finished"):
+                _reset_timer(we["duration"], "exercise")
+
+            finished = _render_timer_controls("timer-display")
+            if finished:
+                if st.button(
+                    "✅ Dalej",
+                    type="primary",
+                    use_container_width=True,
+                    key="timer_done_ex",
+                ):
+                    _advance_after_exercise()
+            else:
+                st.caption("Start → 3 s przygotowania → odliczanie. Stop wstrzymuje czas.")
+                # Można też ręcznie zakończyć wcześniej
+                if st.session_state.timer_mode in ("idle", "paused", "running"):
+                    if st.button(
+                        "✅ Zrobione wcześniej",
+                        use_container_width=True,
+                        key="done_early_ex",
+                    ):
+                        _stop_timer()
+                        _advance_after_exercise()
         else:
+            # Ćwiczenie na powtórzenia – bez stopera
             st.markdown(
                 f"<div class='timer-display'>{we['reps']}</div>",
                 unsafe_allow_html=True,
@@ -436,27 +580,23 @@ def page_player():
                 "<p style='text-align:center;color:#71717a'>powtórzeń</p>",
                 unsafe_allow_html=True,
             )
+            st.info(ex["instructions_pl"])
+            if st.button(
+                "✅ Zrobione – następna",
+                type="primary",
+                use_container_width=True,
+                key="done_btn",
+            ):
+                _advance_after_exercise()
 
-        st.info(ex["instructions_pl"])
-
-        if st.button(
-            "✅ Zrobione – następna",
-            type="primary",
-            use_container_width=True,
-            key="done_btn",
-        ):
-            _advance_after_exercise()
+        if we.get("duration"):
+            st.info(ex["instructions_pl"])
 
     elif phase == "rest":
         rest_sec = we["rest_seconds"]
-        mins, secs = divmod(rest_sec, 60)
 
         st.markdown(
             "<p style='text-align:center;color:#71717a;font-size:1.1rem'>⏱️ Przerwa</p>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<div class='timer-display timer-rest'>{mins:02d}:{secs:02d}</div>",
             unsafe_allow_html=True,
         )
 
@@ -471,15 +611,32 @@ def page_player():
             next_name = "Koniec treningu"
 
         st.caption(f"Następne: **{next_name}**")
-        st.caption(f"Odpocznij ok. {rest_sec} sekund, potem kontynuuj.")
 
-        if st.button(
-            "▶️ Koniec przerwy – dalej",
-            type="primary",
-            use_container_width=True,
-            key="end_rest_btn",
-        ):
-            _advance_after_rest()
+        # Stoper przerwy
+        if (
+            st.session_state.timer_context != "rest"
+            or st.session_state.timer_total != rest_sec
+        ) and st.session_state.timer_mode in ("idle", "finished"):
+            _reset_timer(rest_sec, "rest")
+
+        finished = _render_timer_controls("timer-display timer-rest")
+        if finished:
+            if st.button(
+                "▶️ Dalej",
+                type="primary",
+                use_container_width=True,
+                key="timer_done_rest",
+            ):
+                _advance_after_rest()
+        else:
+            st.caption("Start → 3 s → odliczanie przerwy. Stop wstrzymuje.")
+            if st.button(
+                "⏭️ Pomiń przerwę",
+                use_container_width=True,
+                key="skip_rest_btn",
+            ):
+                _stop_timer()
+                _advance_after_rest()
 
 
 def _advance_after_exercise():
@@ -496,8 +653,10 @@ def _advance_after_exercise():
     if is_last_set and is_last_ex:
         st.session_state.player_phase = "complete"
         st.session_state.completed_exercises = len(exercises)
+        _reset_timer(0, None)
     else:
         st.session_state.player_phase = "rest"
+        _reset_timer(we["rest_seconds"], "rest")
     st.rerun()
 
 
@@ -516,14 +675,24 @@ def _advance_after_rest():
         if is_last_ex:
             st.session_state.player_phase = "complete"
             st.session_state.completed_exercises = len(exercises)
+            _reset_timer(0, None)
         else:
             st.session_state.player_idx = idx + 1
             st.session_state.player_set = 1
             st.session_state.player_phase = "exercise"
             st.session_state.completed_exercises += 1
+            nxt = exercises[idx + 1]
+            if nxt.get("duration"):
+                _reset_timer(nxt["duration"], "exercise")
+            else:
+                _reset_timer(0, "exercise")
     else:
         st.session_state.player_set = current_set + 1
         st.session_state.player_phase = "exercise"
+        if we.get("duration"):
+            _reset_timer(we["duration"], "exercise")
+        else:
+            _reset_timer(0, "exercise")
 
     st.rerun()
 

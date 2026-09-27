@@ -12,7 +12,7 @@ from data.exercises import (
 
 
 # Ćwiczenia typowe na rozgrzewkę (id z bazy)
-WARMUP_IDS = ["jumping_jack", "high_knees", "squat", "lunge", "plank", "mountain_climber"]
+WARMUP_IDS = ["jumping_jack", "high_knees", "squat", "lunge", "plank", "mountain_climber", "inchworm", "glute_bridge", "bird_dog", "calf_raise"]
 
 
 def filter_by_equipment(available: List[str]) -> List[Dict]:
@@ -79,30 +79,60 @@ def _get_sets(level: str, goal: str) -> int:
 
 
 def _select_exercises(filtered: List[Dict], goal: str, count: int) -> List[Dict]:
+    """Dobiera ćwiczenia z rotacją partii – unika powtórzeń tej samej grupy z rzędu."""
     prefer = {
-        "fat_loss": ["cardio", "fullbody", "legs", "core"],
-        "strength": ["chest", "back", "legs", "shoulders", "arms"],
-        "fullbody": ["chest", "back", "legs", "shoulders", "core", "arms"],
-        "endurance": ["cardio", "fullbody", "legs", "core"],
+        "fat_loss": ["cardio", "fullbody", "legs", "core", "chest", "back"],
+        "strength": ["chest", "back", "legs", "shoulders", "arms", "core"],
+        "fullbody": ["chest", "back", "legs", "shoulders", "core", "arms", "fullbody"],
+        "endurance": ["cardio", "fullbody", "legs", "core", "shoulders"],
     }
     preferred_groups = prefer.get(goal, ["fullbody"])
-    selected: List[Dict] = []
     pool = list(filtered)
+    random.shuffle(pool)
+    selected: List[Dict] = []
+    used_ids = set()
 
+    # 1) Po jednym z każdej preferowanej grupy (jeśli dostępne)
     for group in preferred_groups:
         if len(selected) >= count:
             break
         candidates = [
-            e for e in pool if e["muscle_group"] == group and e not in selected
+            e for e in pool
+            if e["muscle_group"] == group and e["id"] not in used_ids
         ]
         if candidates:
-            selected.append(random.choice(candidates))
+            choice = random.choice(candidates)
+            selected.append(choice)
+            used_ids.add(choice["id"])
 
+    # 2) Uzupełnij do count – preferuj inną partię niż ostatnia
     while len(selected) < count:
-        remaining = [e for e in pool if e not in selected]
+        remaining = [e for e in pool if e["id"] not in used_ids]
         if not remaining:
             break
-        selected.append(random.choice(remaining))
+        last_group = selected[-1]["muscle_group"] if selected else None
+        different = [e for e in remaining if e["muscle_group"] != last_group]
+        candidates = different if different else remaining
+        # lekka preferencja grup z preferred
+        preferred_left = [e for e in candidates if e["muscle_group"] in preferred_groups]
+        if preferred_left:
+            candidates = preferred_left
+        choice = random.choice(candidates)
+        selected.append(choice)
+        used_ids.add(choice["id"])
+
+    # 3) Przestaw kolejność tak, by sąsiednie miały różne partie (gdy możliwe)
+    if len(selected) > 2:
+        improved = [selected[0]]
+        rest = selected[1:]
+        while rest:
+            last_g = improved[-1]["muscle_group"]
+            pick_i = next(
+                (i for i, e in enumerate(rest) if e["muscle_group"] != last_g),
+                0,
+            )
+            improved.append(rest.pop(pick_i))
+        selected = improved
 
     return selected
 

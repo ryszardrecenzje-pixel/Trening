@@ -548,10 +548,18 @@ def page_player():
 
         gif = ex.get("gif_url")
         if gif:
-            try:
-                st.image(gif, use_container_width=True, caption=t("preview_move", LANG))
-            except Exception:
-                st.caption("(brak podglądu)")
+            st.caption(t("preview_move", LANG))
+            st.markdown(
+                f"""
+                <div style="text-align:center;margin:0.4rem 0 0.8rem">
+                  <img src="{gif}" alt="{ex.get('name_pl','')}"
+                       style="width:100%;max-width:420px;border-radius:12px;background:#111"
+                       onerror="this.style.display='none';this.nextElementSibling.style.display='block';"/>
+                  <p style="display:none;color:#a1a1aa;font-size:0.9rem">Brak animacji – wykonaj wg opisu poniżej.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
         if ex.get("safety_tip"):
             st.warning(f"{t('safety', LANG)}: {ex['safety_tip']}")

@@ -38,6 +38,7 @@ from utils.storage import (
     compute_stats,
     export_all,
     import_all,
+    get_backend_status,
 )
 from utils.i18n import t
 from utils.audio import play_sound
@@ -749,6 +750,36 @@ def page_history():
 def page_more():
     st.title(t("nav_more", LANG))
 
+    # Status backendu
+    st.subheader("Baza danych")
+    status = get_backend_status()
+    if status.get("connected"):
+        st.success(f"Supabase połączony · device `{status.get('client_id', '')}`")
+    elif status.get("configured"):
+        st.warning(
+            f"Supabase skonfigurowany, ale błąd połączenia: {status.get('error') or '—'}"
+        )
+    else:
+        st.info(
+            "Tryb lokalny (JSON). Dodaj secrets Supabase, aby zapisywać dane w chmurze."
+        )
+        with st.expander("Jak podłączyć Supabase"):
+            st.markdown(
+                """
+1. Utwórz projekt na [supabase.com](https://supabase.com)
+2. **SQL Editor** → wklej zawartość pliku `supabase/schema.sql` → Run
+3. **Project Settings → API** → skopiuj **URL** i **anon public** key
+4. Streamlit Cloud → **Settings → Secrets**:
+```toml
+[supabase]
+url = "https://xxxx.supabase.co"
+anon_key = "eyJ..."
+```
+5. Reboot aplikacji
+                """
+            )
+
+    st.divider()
     st.subheader(t("language", LANG))
     lang = st.radio(
         "lang",
@@ -777,7 +808,8 @@ def page_more():
     st.divider()
     st.subheader("Backup")
     st.caption(
-        "Na Streamlit Cloud pliki mogą znikać po restarcie – eksportuj kopię zapasową."
+        "Eksport/import działa zawsze. Przy Supabase dane i tak są w chmurze – "
+        "backup to dodatkowa kopia bezpieczeństwa."
     )
     payload = export_all(
         st.session_state.history,
@@ -812,7 +844,7 @@ def page_more():
         st.session_state.show_onboarding = True
         st.session_state.page = "trening"
         st.rerun()
-    st.caption("Home Workout · JSON lokalnie · Supabase później")
+    st.caption("Home Workout · Supabase + fallback JSON · auth później")
 
 
 page = st.session_state.page

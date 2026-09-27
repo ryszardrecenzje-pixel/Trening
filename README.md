@@ -1,41 +1,79 @@
 # 🏋️ Home Workout – Trening w domu
 
-Aplikacja Streamlit do treningu w domu z planami dopasowanymi do sprzętu.
+Streamlit + opcjonalnie **Supabase** (historia, ulubione, ustawienia).
 
 ## Funkcje
 
-- **Sprzęt** – checklista (masa ciała, hantle, drążek, gumy, ławka, TRX, skakanka)
-- **Generator** – cel, czas (15/30/45), poziom + opcjonalna **rozgrzewka**
-- **GIF-y** – animacja techniki każdego ćwiczenia
-- **Stoper** – Start / Stop, **3 s zwłoki**, dźwięki 3–2–1 i koniec
-- **Historia** – zapis JSON + **streak**, statystyki tygodnia
-- **RPE + notatka** po treningu
-- **Ulubione plany** – szybki start
-- **Zamienniki** i **wskazówki bezpieczeństwa**
-- **PL / EN**, eksport/import backupu
-- **Onboarding** przy pierwszym uruchomieniu
+- Plany dopasowane do sprzętu, GIF-y, stoper (Start/Stop + 3 s)
+- Rozgrzewka, ulubione, RPE, streak, PL/EN
+- **Supabase** albo lokalny JSON (fallback)
+- Eksport/import backupu
 
-> Supabase / logowanie – później. Na Streamlit Cloud pliki mogą znikać po restarcie → **Eksport** w zakładce Więcej.
-
-## Uruchomienie
+## Szybki start (lokalnie)
 
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Deploy (Streamlit Cloud)
+Bez secrets działa w trybie **local JSON**.
 
-1. Push na GitHub
-2. https://share.streamlit.io → New app
-3. Main file: `app.py`
+## Podłączenie Supabase
+
+### 1. Projekt i tabele
+
+1. [supabase.com](https://supabase.com) → New project  
+2. **SQL Editor** → wklej `supabase/schema.sql` → **Run**
+
+### 2. Klucze API
+
+**Project Settings → API**:
+- Project URL  
+- `anon` `public` key  
+
+### 3a. Streamlit Cloud
+
+**Settings → Secrets**:
+
+```toml
+[supabase]
+url = "https://YOUR_PROJECT.supabase.co"
+anon_key = "eyJ..."
+```
+
+Reboot app.
+
+### 3b. Lokalnie
+
+```bash
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# uzupełnij url i anon_key
+```
+
+W aplikacji: **Więcej → Baza danych** pokaże status połączenia.
+
+## Auth (później)
+
+Tabele mają kolumnę `user_id` (nullable).  
+Obecnie dane są wiązane z `client_id` (UUID urządzenia).  
+Po dodaniu logowania: zapis `auth.uid()` + zaostrzenie RLS.
 
 ## Struktura
 
 ```
 app.py
 data/exercises.py
-utils/workout.py storage.py audio.py i18n.py
-user_data/          # runtime JSON
-.streamlit/config.toml
+utils/
+  storage.py          # Supabase + JSON fallback
+  supabase_client.py
+  workout.py audio.py i18n.py
+supabase/schema.sql
+.streamlit/secrets.toml.example
+```
+
+## requirements
+
+```
+streamlit==1.39.0
+supabase==2.10.0
 ```

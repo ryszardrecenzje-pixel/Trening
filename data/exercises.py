@@ -53,7 +53,20 @@ DIFFICULTY_LABELS = {
 }
 
 EXERCISES = [
-    # placeholder - full restore needed
+    # --- BODYWEIGHT / CHEST ---
+    {
+        "id": "pushup",
+        "gif_url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/push-up.gif",
+        "safety_tip": "Nie zapadaj klatki – ciało w jednej linii, łokcie ~45°.",
+        "name_pl": "Pompki klasyczne",
+        "muscle_group": "chest",
+        "difficulty": "beginner",
+        "equipment": ["bodyweight"],
+        "instructions_pl": "Utrzymuj ciało prosto, opuść klatkę do podłogi, wypchnij w górę.",
+        "default_reps": 12,
+        "is_timed": False,
+        "calories_per_min": 8,
+    },
 ]
 
 ALL_EQUIPMENT = list(EQUIPMENT_LABELS.keys())
